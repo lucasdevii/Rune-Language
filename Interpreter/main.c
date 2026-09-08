@@ -32,9 +32,8 @@ void readArchive(FILE *file);
 
 
 int main(int argc, char *argv[]){
-    char* path = "./workspaces/Rune-Language/arch.rn";
+    char* path = argv[1];
 
-    printf("%d \n", argc);
     printf("%s %s \n", argv[0], argv[1]);
     
     FILE *file = getArchive(path);
