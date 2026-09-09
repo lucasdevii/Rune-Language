@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -g
+CFLAGS = -g
 OBJS = main.o lexer.o parser.o
 
 rune: $(OBJS)
