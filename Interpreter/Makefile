@@ -1,5 +1,6 @@
 CC = gcc
 CFLAGS = -g
+SRCDIR = src
 OBJDIR = compiled
 
 OBJS = $(OBJDIR)/main.o $(OBJDIR)/lexer.o $(OBJDIR)/parser.o
@@ -7,7 +8,7 @@ OBJS = $(OBJDIR)/main.o $(OBJDIR)/lexer.o $(OBJDIR)/parser.o
 rune: $(OBJS)
 	$(CC) -o $@ $(OBJS)
 
-$(OBJDIR)/%.o: %.c
+$(OBJDIR)/%.o: $(SRCDIR)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
