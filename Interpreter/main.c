@@ -12,9 +12,30 @@
 
 FILE* getArchive(char *caminho);
 void readArchive(FILE *file);
-void lexer(FILE *file, Token **head, Token **tail);
 
- 
+char *token_type_name(TokenTypes t) {
+    switch (t) {
+        case NOTHING:       return "NOTHING";
+        case VALUE:         return "VALUE";
+        case NAME:          return "NAME";
+        case TYPE:          return "TYPE";
+        case OPERATOR:      return "OPERATOR";
+        case END:           return "END";
+        case TYPE_INT:      return "TYPE_INT";
+        case TYPE_BOOL:     return "TYPE_BOOL";
+        case TYPE_STRING:   return "TYPE_STRING";
+        case VARIABLE_NAME: return "VARIABLE_NAME";
+        case COMPARE:       return "COMPARE";
+        case ATTRIBUTION:   return "ATTRIBUTION";
+        case SUM:           return "SUM";
+        case SUBTRACT:      return "SUBTRACT";
+        case MULTIPLY:      return "MULTIPLY";
+        case DIVIDE:        return "DIVIDE";
+        default:            return "UNKNOWN";
+    }
+}
+
+
 int main(int argc, char *argv[]){
     if (argc < 2) {
         printf("Uso: %s <caminho_do_arquivo>\n", argv[0]);
@@ -49,7 +70,6 @@ FILE* getArchive(char *caminho){
     return file;
 }
 
-
 void readArchive(FILE* file){
     struct Token *head = NULL;
     struct Token *tail = NULL;
@@ -60,10 +80,12 @@ void readArchive(FILE* file){
 
     Token *current = head;
     while (current != NULL) {
-        printf("Token: %s (Tipo: %d)\n", current->text, current->specificType);
+        printf("%s (%s)\n", current->text, token_type_name(current->specificType));
         Token *temp = current;
         current = current->nextNode;
         free(temp->text);
         free(temp);
     }
 }
+
+

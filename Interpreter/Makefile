@@ -1,12 +1,16 @@
 CC = gcc
 CFLAGS = -g
-OBJS = main.o lexer.o parser.o
+OBJDIR = compiled
+
+OBJS = $(OBJDIR)/main.o $(OBJDIR)/lexer.o $(OBJDIR)/parser.o
 
 rune: $(OBJS)
 	$(CC) -o $@ $(OBJS)
 
-%.o: %.c
+$(OBJDIR)/%.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f *.o rune
+	rm -f $(OBJDIR)/*.o rune
+
+.PHONY: clean   

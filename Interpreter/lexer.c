@@ -1,27 +1,20 @@
 #include <stdio.h>
 #include <string.h>
+#include <ctype.h>
+#include <stdlib.h>
 
 #include "token.h"
 
-void addToken(Token **head, Token **tail, const char *text, TokenTypes generalType, TokenTypes specificType) {
-    Token *newToken = calloc(sizeof(Token));
-    newToken->text = strdup(text);
-    newToken->nextNode = NULL;
-    newToken->geralType = generalType;
-    newToken->specificType = specificType;
-
-    if (*head == NULL) {
-        *head = newToken;
-        *tail = newToken;
-    } else {
-        (*tail)->nextNode = newToken;
-        *tail = newToken;
-    }
-}
-
+//PRÉ INICIALIZAÇÃO DE FUNÇÕES
+void addToken(Token **head, Token **tail, const char *text, TokenTypes generalType, TokenTypes specificType);
+void tokenTypeVerifications(char *buffer, TokenTypes *generalType, TokenTypes *specificType);
+int checkPrimitiveTypes(char *buffer, TokenTypes *generalType, TokenTypes *specificType);
+int checkOperators(char *buffer, TokenTypes *generalType, TokenTypes *specificType);
+int checkVariablesComponet(char *buffer, TokenTypes *generalType, TokenTypes *specificType);
 
 void lexer(FILE *file, Token **head, Token **tail){
     char *buffer = calloc(15, sizeof(char));
+    int length = 0;
     
     int c;
 
@@ -39,25 +32,57 @@ void lexer(FILE *file, Token **head, Token **tail){
             addToken(head, tail, buffer, generalType, specificType);
 
             if (c == ';') {
-                addToken(head, tail, ";", END, NOTHING);
+                addToken(head, tail, ";", END, END);
             }
 
             buffer[0] = '\0';
+            length = 0;
             continue;
         }
+        
+        buffer[length] = c;
+        buffer[length + 1] = '\0';
 
-        buffer[strlen(buffer)] = c;
-        buffer[strlen(buffer) + 1] = '\0';
+        length++;
     }
+
+    Token *currentTail = *head;
 
     free(buffer);
 }
 
-void tokenTypeVerifications(char *buffer, TokenTypes *generalType, TokenTypes *specificType){ //PEga o token e faz verificações
-    checkPrimitiveTypes(buffer, generalType, specificType); 
+void addToken(Token **head, Token **tail, const char *text, TokenTypes generalType, TokenTypes specificType) {
+    Token *newToken = malloc(sizeof(Token));
+    newToken->text = strdup(text);
+    newToken->nextNode = NULL;
+    newToken->geralType = generalType;
+    newToken->specificType = specificType;
+
+    if (*head == NULL) {
+        *head = newToken;
+        *tail = newToken;
+    } else {
+        (*tail)->nextNode = newToken;
+        *tail = newToken;
+    }
 }
 
-void checkPrimitiveTypes(char *buffer, TokenTypes *generalType, TokenTypes *specificType){
+
+void tokenTypeVerifications(char *buffer, TokenTypes *generalType, TokenTypes *specificType){ //PEga o token e faz verificações
+    int stopChecking = 0;
+
+    stopChecking = checkPrimitiveTypes(buffer, generalType, specificType); 
+
+    if(!stopChecking) {
+        stopChecking = checkOperators(buffer, generalType, specificType);
+    }
+    if(!stopChecking) {
+        stopChecking = checkVariablesComponet(buffer, generalType, specificType);
+    }
+
+}
+
+int checkPrimitiveTypes(char *buffer, TokenTypes *generalType, TokenTypes *specificType){
     if(strcmp(buffer, "int") == 0){
         *specificType = TYPE_INT;
     }
@@ -70,6 +95,60 @@ void checkPrimitiveTypes(char *buffer, TokenTypes *generalType, TokenTypes *spec
 
     if(*specificType != NOTHING){
         *generalType = TYPE;
+        return 1;
     }
+    return 0;
 }
 
+int checkOperators(char *buffer, TokenTypes *generalType, TokenTypes *specificType){
+    if(strcmp(buffer, "=") == 0){
+        *specificType = ATTRIBUTION;
+    }
+    else if(strcmp(buffer, "==") == 0){
+        *specificType = COMPARE;
+    }
+    else if(strcmp(buffer, "+") == 0){
+        *specificType = SUM;
+    }
+    else if(strcmp(buffer, "-") == 0){
+        *specificType = SUBTRACT;
+    }
+    else if(strcmp(buffer, "*") == 0){
+        *specificType = MULTIPLY;
+    }
+    else if(strcmp(buffer, "/") == 0){
+        *specificType = DIVIDE;
+    }
+
+    if(*specificType != NOTHING){
+        *generalType = OPERATOR;
+        return 1;
+    }
+    return 0;
+}
+
+int checkVariablesComponet(char *buffer, TokenTypes *generalType, TokenTypes *specificType){
+    if(
+        isalpha(buffer[0]) || 
+        buffer[0] == '_' || 
+        buffer[0] == '$'
+    ){
+        *specificType = VARIABLE_NAME;
+        *generalType = NAME;
+    
+        return 1;
+    }
+    else if(
+        isdigit(buffer[0]) ||
+        buffer[0] == '\"' ||
+        buffer[0] == '\''
+    ){
+        //É BOM QUE SPECIFICTYPE SAIBA IDENTIFICAR TIPO DA VARIAVEL FUTURAMENTE A PARTIR DE UMA FUNÇÃO 
+        *specificType = VALUE;
+        *generalType = VALUE;
+
+        return 1;
+    }
+
+    return 0;
+}

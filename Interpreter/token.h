@@ -2,8 +2,11 @@
 #define TOKEN_H
 
 typedef enum TokenTypes {
+    NOTHING,
+
     //TOKENS GERAIS
-    VARIABLE,
+    VALUE,
+    NAME,
     TYPE,
     OPERATOR,
     END,
@@ -15,13 +18,14 @@ typedef enum TokenTypes {
 
     //DECLARATIONS
     VARIABLE_NAME,
-    VARIABLE_VALUE,
 
     //OPERADORES: 
     COMPARE,
-    IGUALS,
-
-    NOTHING = 0
+    ATTRIBUTION,
+    SUM,
+    SUBTRACT,
+    MULTIPLY,
+    DIVIDE
 } TokenTypes;
 
 typedef struct Token {
@@ -30,5 +34,6 @@ typedef struct Token {
     TokenTypes geralType;
     struct Token *nextNode;
 } Token;
+
 
 #endif
