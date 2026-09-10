@@ -5,12 +5,18 @@
 
 #include "token.h"
 
+typedef struct TokenTypePair { //Para retornar dois tipos de token ao mesmo tempo
+    TokenTypes generalType;
+    TokenTypes specificType;
+} TokenTypePair;
+
 //PRÉ INICIALIZAÇÃO DE FUNÇÕES
 void addToken(Token **head, Token **tail, const char *text, TokenTypes generalType, TokenTypes specificType);
 void tokenTypeVerifications(char *buffer, TokenTypes *generalType, TokenTypes *specificType);
 int checkPrimitiveTypes(char *buffer, TokenTypes *generalType, TokenTypes *specificType);
 int checkOperators(char *buffer, TokenTypes *generalType, TokenTypes *specificType);
 int checkVariablesComponet(char *buffer, TokenTypes *generalType, TokenTypes *specificType);
+TokenTypePair getType(char *buffer);
 
 void lexer(FILE *file, Token **head, Token **tail){
     char *buffer = calloc(15, sizeof(char));
@@ -87,12 +93,14 @@ int checkPrimitiveTypes(char *buffer, TokenTypes *generalType, TokenTypes *speci
         *specificType = TYPE_INT;
     }
     else if(strcmp(buffer, "string") == 0){
-        *specificType = TYPE_STRING;
+        *specificType = TYPE_TEXT;
     }
     else if(strcmp(buffer, "bool") == 0){
         *specificType = TYPE_BOOL;
     }
-
+    else if(strcmp(buffer, "float") == 0){
+        *specificType = TYPE_FLOAT;
+    }
     if(*specificType != NOTHING){
         *generalType = TYPE;
         return 1;
@@ -128,27 +136,57 @@ int checkOperators(char *buffer, TokenTypes *generalType, TokenTypes *specificTy
 }
 
 int checkVariablesComponet(char *buffer, TokenTypes *generalType, TokenTypes *specificType){
-    if(
+    TokenTypePair pair = getType(buffer);
+    *generalType = pair.generalType;
+    *specificType = pair.specificType;
+
+    if(getType(buffer).generalType == NOTHING && getType(buffer).specificType == NOTHING){
+        printf("Erro: Token desconhecido '%s'\n", buffer);
+
+        return 0;
+    }
+
+    return 1;
+}
+
+TokenTypePair getType(char *buffer){
+    TokenTypePair types;
+
+    types.specificType = NOTHING;
+    types.generalType = NOTHING;
+
+    if(strcmp(buffer, "true") == 0 || strcmp(buffer, "false") == 0){ //Booleano
+        types.specificType = TYPE_BOOL;
+        types.generalType = VALUE;
+
+        return types;
+    }
+    else if(strcmp(buffer, "null") == 0){ //Null
+        types.specificType = TYPE_NULL;
+        types.generalType = VALUE;
+
+        return types;
+    }
+    else if(buffer[0] == '\"' || buffer[0] == '\''){ //String
+        types.specificType = TYPE_TEXT;
+        types.generalType = VALUE;
+
+        return types;
+    }
+    else if(isdigit(buffer[0])){ //Numero
+        types.specificType = TYPE_INT;
+        types.generalType = VALUE;
+
+        return types;
+    }
+    else if( //Se não for um tipo primitivo, operador ou valor, então é uma variável name
         isalpha(buffer[0]) || 
         buffer[0] == '_' || 
         buffer[0] == '$'
     ){
-        *specificType = VARIABLE_NAME;
-        *generalType = NAME;
+        types.specificType = VARIABLE_NAME;
+        types.generalType = NAME;
     
-        return 1;
+        return types;
     }
-    else if(
-        isdigit(buffer[0]) ||
-        buffer[0] == '\"' ||
-        buffer[0] == '\''
-    ){
-        //É BOM QUE SPECIFICTYPE SAIBA IDENTIFICAR TIPO DA VARIAVEL FUTURAMENTE A PARTIR DE UMA FUNÇÃO 
-        *specificType = VALUE;
-        *generalType = VALUE;
-
-        return 1;
-    }
-
-    return 0;
 }
