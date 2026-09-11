@@ -19,13 +19,20 @@ typedef enum TokenTypes {
     TYPE_NULL,
 
     //DECLARATIONS
-    VARIABLE_NAME,
+    IDENTIFIER,
+
+    //DELIMITADORES
+    DELIMITER,
+    OPEN_PARENTHESIS,
+    CLOSE_PARENTHESIS,
+    OPEN_BRACE,
+    CLOSE_BRACE,
 
     //OPERADORES: 
     COMPARE,
-    ATTRIBUTION,
-    SUM,
-    SUBTRACT,
+    ASSIGNMENT,
+    PLUS,
+    MINUS,
     MULTIPLY,
     DIVIDE
 } TokenTypes;
@@ -40,25 +47,30 @@ typedef struct Token {
 
 static inline const char *token_type_name(TokenTypes t) {
     switch (t) {
-        case NOTHING:       return "NOTHING";
-        case VALUE:         return "VALUE";
-        case NAME:          return "NAME";
-        case TYPE:          return "TYPE";
-        case OPERATOR:      return "OPERATOR";
-        case END:           return "END";
-        case TYPE_INT:      return "TYPE_INT";
-        case TYPE_BOOL:     return "TYPE_BOOL";
-        case TYPE_TEXT:     return "TYPE_TEXT";
-        case TYPE_FLOAT:    return "TYPE_FLOAT";
-        case TYPE_NULL:     return "TYPE_NULL";
-        case VARIABLE_NAME: return "VARIABLE_NAME";
-        case COMPARE:       return "COMPARE";
-        case ATTRIBUTION:   return "ATTRIBUTION";
-        case SUM:           return "SUM";
-        case SUBTRACT:      return "SUBTRACT";
-        case MULTIPLY:      return "MULTIPLY";
-        case DIVIDE:        return "DIVIDE";
-        default:            return "UNKNOWN";
+        case NOTHING:           return "NOTHING";
+        case VALUE:             return "VALUE";
+        case NAME:              return "NAME";
+        case TYPE:              return "TYPE";
+        case OPERATOR:          return "OPERATOR";
+        case END:               return "END";
+        case TYPE_INT:          return "TYPE_INT";
+        case TYPE_BOOL:         return "TYPE_BOOL";
+        case TYPE_TEXT:         return "TYPE_TEXT";
+        case TYPE_FLOAT:        return "TYPE_FLOAT";
+        case TYPE_NULL:         return "TYPE_NULL";
+        case IDENTIFIER:        return "IDENTIFIER";
+        case DELIMITER:         return "DELIMITER";
+        case OPEN_PARENTHESIS:  return "OPEN_PARENTHESIS";
+        case CLOSE_PARENTHESIS: return "CLOSE_PARENTHESIS";
+        case OPEN_BRACE:        return "OPEN_BRACE";
+        case CLOSE_BRACE:       return "CLOSE_BRACE";
+        case COMPARE:           return "COMPARE";
+        case ASSIGNMENT:        return "ASSIGNMENT";
+        case PLUS:              return "PLUS";
+        case MINUS:             return "MINUS";
+        case MULTIPLY:          return "MULTIPLY";
+        case DIVIDE:            return "DIVIDE";
+        default:                return "UNKNOWN";
     }
 }
 

@@ -5,8 +5,8 @@
 #include <time.h> 
 #include <string.h>
 
-#include "lexer.h"
-#include "token.h"
+#include "../data/lexer.h"
+#include "../data/token.h"
 
 //pré-inicialização
 
@@ -43,7 +43,6 @@ FILE* getArchive(char *caminho){
         return NULL; // Encerra o programa se o arquivo não existir
     }
     
-
     return file;
 }
 
