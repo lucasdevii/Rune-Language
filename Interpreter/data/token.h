@@ -9,7 +9,9 @@ typedef enum TokenTypes {
     NAME,
     TYPE,
     OPERATOR,
-    END,
+    IDENTIFIER,
+    PUNCTUATOR,
+    DELIMITER,
 
     //TIPOS PRIMITIVOS
     TYPE_INT,
@@ -18,11 +20,7 @@ typedef enum TokenTypes {
     TYPE_FLOAT,
     TYPE_NULL,
 
-    //DECLARATIONS
-    IDENTIFIER,
-
-    //DELIMITADORES
-    DELIMITER,
+    //PONTUADORES
     OPEN_PARENTHESIS,
     CLOSE_PARENTHESIS,
     OPEN_BRACE,
@@ -52,7 +50,6 @@ static inline const char *token_type_name(TokenTypes t) {
         case NAME:              return "NAME";
         case TYPE:              return "TYPE";
         case OPERATOR:          return "OPERATOR";
-        case END:               return "END";
         case TYPE_INT:          return "TYPE_INT";
         case TYPE_BOOL:         return "TYPE_BOOL";
         case TYPE_TEXT:         return "TYPE_TEXT";

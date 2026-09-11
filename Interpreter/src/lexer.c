@@ -13,10 +13,15 @@ typedef struct TokenTypePair { //Para retornar dois tipos de token ao mesmo temp
 //PRÉ INICIALIZAÇÃO DE FUNÇÕES
 void addToken(Token **head, Token **tail, char *text, TokenTypes generalType, TokenTypes specificType);
 void tokenTypeVerifications(char *buffer, TokenTypes *generalType, TokenTypes *specificType);
+
 int checkPrimitiveTypes(char *buffer, TokenTypes *generalType, TokenTypes *specificType);
-int checkOperators(char *buffer, TokenTypes *generalType, TokenTypes *specificType);
+
 int checkVariablesComponet(char *buffer, TokenTypes *generalType, TokenTypes *specificType);
-int checkDelimiters(char character, TokenTypes *generalType, TokenTypes *specificType);
+
+int checkSpecialTokens(char character, char* buffer, FILE *file, TokenTypes *generalType, TokenTypes *specificType);
+int checkPunctuator(char character, TokenTypes *generalType, TokenTypes *specificType);
+int checkOperators(char character, FILE *file, TokenTypes *generalType, TokenTypes *specificType);
+
 TokenTypePair getType(char *buffer);
 
 void lexer(FILE *file, Token **head, Token **tail){
@@ -27,12 +32,12 @@ void lexer(FILE *file, Token **head, Token **tail){
 
     while ((c = fgetc(file)) != EOF) {
         //Vai verificar se o caractere é um delimitador, se sim, vai adicionar o token do buffer e o token do delimitador
-        TokenTypes specificDelimiterType = NOTHING;
-        TokenTypes generalDelimiterType = NOTHING;
+        TokenTypes specificSpecialTokenType = NOTHING;
+        TokenTypes generalSpecialTokenType = NOTHING;
 
-        int isDelimiter = checkDelimiters(c, &generalDelimiterType, &specificDelimiterType);
+        int isSpecialToken = checkSpecialTokens(c, buffer, file, &generalSpecialTokenType, &specificSpecialTokenType);
         
-        if (isspace(c) || isDelimiter) {
+        if (isspace(c) || isSpecialToken) {
 
             if (buffer[0]) {
                 TokenTypes specificType = NOTHING;
@@ -46,15 +51,15 @@ void lexer(FILE *file, Token **head, Token **tail){
                 length = 0;
             }
 
-            if (isDelimiter) {
-                char delimiterBuffer[2] = {c, '\0'};
+            if (isSpecialToken) {
+                char SpecialTokenBuffer[2] = {c, '\0'};
 
                 addToken(
                     head,
                     tail,
-                    delimiterBuffer,
-                    generalDelimiterType,
-                    specificDelimiterType
+                    SpecialTokenBuffer,
+                    generalSpecialTokenType,
+                    specificSpecialTokenType
                 );
             }
 
@@ -95,14 +100,25 @@ void tokenTypeVerifications(char *buffer, TokenTypes *generalType, TokenTypes *s
     stopChecking = checkPrimitiveTypes(buffer, generalType, specificType); 
 
     if(!stopChecking) {
-        stopChecking = checkOperators(buffer, generalType, specificType);
-    }
-    if(!stopChecking) {
         stopChecking = checkVariablesComponet(buffer, generalType, specificType);
     }
     if(!stopChecking) {
         printf("Erro: assinatura ('%s') desconhecida \n", buffer);
     }
+}
+
+int checkVariablesComponet(char *buffer, TokenTypes *generalType, TokenTypes *specificType){
+    TokenTypePair pair = getType(buffer);
+    *generalType = pair.generalType;
+    *specificType = pair.specificType;
+
+    if(pair.generalType == NOTHING && pair.specificType == NOTHING){
+        printf("Erro: Token desconhecido '%s'\n", buffer);
+
+        return 0;
+    }
+
+    return 1;
 }
 
 int checkPrimitiveTypes(char *buffer, TokenTypes *generalType, TokenTypes *specificType){
@@ -127,51 +143,45 @@ int checkPrimitiveTypes(char *buffer, TokenTypes *generalType, TokenTypes *speci
     return 0;
 }
 
-int checkOperators(char *buffer, TokenTypes *generalType, TokenTypes *specificType){
-    if(strcmp(buffer, "=") == 0){
-        *specificType = ASSIGNMENT;
-    }
-    else if(strcmp(buffer, "==") == 0){
+int checkOperators(char character, FILE *file, TokenTypes *generalType, TokenTypes *specificType){
+    char nextCharacter = fgetc(file); //Pega o proximo caracter para verificações
+
+    if(character == '=' && nextCharacter == '='){
         *specificType = COMPARE;
     }
-    else if(strcmp(buffer, "+") == 0){
-        *specificType = PLUS;
-    }
-    else if(strcmp(buffer, "-") == 0){
-        *specificType = MINUS;
-    }
-    else if(strcmp(buffer, "*") == 0){
-        *specificType = MULTIPLY;
-    }
-    else if(strcmp(buffer, "/") == 0){
-        *specificType = DIVIDE;
-    }
+    else{
+        if(nextCharacter != EOF) {
+            ungetc(nextCharacter, file); //Coloca o caractere de volta no arquivo se não for um operador de comparação
+        }
 
-    if(*specificType != NOTHING){
-        *generalType = OPERATOR;
-        
-        return 1;
+        if(character == '='){
+            *specificType = ASSIGNMENT;
+        }
+        else if(character == '+'){
+            *specificType = PLUS;
+        }
+        else if(character == '-'){
+            *specificType = MINUS;
+        }
+        else if(character == '*'){
+            *specificType = MULTIPLY;
+        }
+        else if(character == '/'){
+            *specificType = DIVIDE;
+        }
+
+        if(*specificType != NOTHING){
+            *generalType = OPERATOR;
+            
+            return 1;
+        }
     }
     return 0;
 }
 
-int checkVariablesComponet(char *buffer, TokenTypes *generalType, TokenTypes *specificType){
-    TokenTypePair pair = getType(buffer);
-    *generalType = pair.generalType;
-    *specificType = pair.specificType;
-
-    if(getType(buffer).generalType == NOTHING && getType(buffer).specificType == NOTHING){
-        printf("Erro: Token desconhecido '%s'\n", buffer);
-
-        return 0;
-    }
-
-    return 1;
-}
-
-int checkDelimiters(char character, TokenTypes *generalType, TokenTypes *specificType){
+int checkPunctuator(char character, TokenTypes *generalType, TokenTypes *specificType){
     if(character == ';'){
-        *specificType = END;
+        *specificType = DELIMITER;
     }
     else if(character == '('){
         *specificType = OPEN_PARENTHESIS;
@@ -187,8 +197,16 @@ int checkDelimiters(char character, TokenTypes *generalType, TokenTypes *specifi
     }
 
     if(*specificType != NOTHING){
-        *generalType = DELIMITER;
+        *generalType = PUNCTUATOR;
         
+        return 1;
+    }
+
+    return 0;
+}
+
+int checkSpecialTokens(char character, char* buffer, FILE *file, TokenTypes *generalType, TokenTypes *specificType){
+    if(checkOperators(character, file, generalType, specificType) || checkPunctuator(character, generalType, specificType)){
         return 1;
     }
 
