@@ -42,6 +42,10 @@ typedef struct Token {
     struct Token *nextNode;
 } Token;
 
+typedef struct TokenTypePair { //Para retornar dois tipos de token ao mesmo tempo
+    TokenTypes generalType;
+    TokenTypes specificType;
+} TokenTypePair;
 
 static inline const char *token_type_name(TokenTypes t) {
     switch (t) {

@@ -5,11 +5,6 @@
 
 #include "../data/token.h"
 
-typedef struct TokenTypePair { //Para retornar dois tipos de token ao mesmo tempo
-    TokenTypes generalType;
-    TokenTypes specificType;
-} TokenTypePair;
-
 //PRÉ INICIALIZAÇÃO DE FUNÇÕES
 void addToken(Token **head, Token **tail, char *text, TokenTypes generalType, TokenTypes specificType);
 void tokenTypeVerifications(char *buffer, TokenTypes *generalType, TokenTypes *specificType);
