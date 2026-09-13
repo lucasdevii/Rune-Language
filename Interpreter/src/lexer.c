@@ -27,16 +27,16 @@ void lexer(FILE *file, Token **head, Token **tail){
 
     while ((c = fgetc(file)) != EOF) {
         //Vai verificar se o caractere é um delimitador, se sim, vai adicionar o token do buffer e o token do delimitador
-        TokenTypes specificSpecialTokenType = NOTHING;
-        TokenTypes generalSpecialTokenType = NOTHING;
+        TokenTypes specificSpecialTokenType = TOKEN_NOTHING;
+        TokenTypes generalSpecialTokenType = TOKEN_NOTHING;
 
         int isSpecialToken = checkSpecialTokens(c, buffer, file, &generalSpecialTokenType, &specificSpecialTokenType);
         
         if (isspace(c) || isSpecialToken) {
 
             if (buffer[0]) {
-                TokenTypes specificType = NOTHING;
-                TokenTypes generalType = NOTHING;
+                TokenTypes specificType = TOKEN_NOTHING;
+                TokenTypes generalType = TOKEN_NOTHING;
 
                 tokenTypeVerifications(buffer, &generalType, &specificType);
 
@@ -109,7 +109,7 @@ int checkVariablesComponet(char *buffer, TokenTypes *generalType, TokenTypes *sp
     *generalType = pair.generalType;
     *specificType = pair.specificType;
 
-    if(pair.generalType == NOTHING && pair.specificType == NOTHING){
+    if(pair.generalType == TOKEN_NOTHING && pair.specificType == TOKEN_NOTHING){
         printf("Erro: Token desconhecido '%s'\n", buffer);
 
         exit(EXIT_FAILURE);
@@ -132,7 +132,7 @@ int checkPrimitiveTypes(char *buffer, TokenTypes *generalType, TokenTypes *speci
         *specificType = TYPE_FLOAT;
     }
 
-    if(*specificType != NOTHING){
+    if(*specificType != TOKEN_NOTHING){
         *generalType = TYPE;
         
         return 1;
@@ -167,7 +167,7 @@ int checkOperators(char character, FILE *file, TokenTypes *generalType, TokenTyp
             *specificType = DIVIDE;
         }
 
-        if(*specificType != NOTHING){
+        if(*specificType != TOKEN_NOTHING){
             *generalType = OPERATOR;
             
             return 1;
@@ -193,7 +193,7 @@ int checkPunctuator(char character, TokenTypes *generalType, TokenTypes *specifi
         *specificType = CLOSE_BRACE;
     }
 
-    if(*specificType != NOTHING){
+    if(*specificType != TOKEN_NOTHING){
         *generalType = PUNCTUATOR;
         
         return 1;
@@ -213,8 +213,8 @@ int checkSpecialTokens(char character, char* buffer, FILE *file, TokenTypes *gen
 TokenTypePair getType(char *buffer){
     TokenTypePair types;
 
-    types.specificType = NOTHING;
-    types.generalType = NOTHING;
+    types.specificType = TOKEN_NOTHING;
+    types.generalType = TOKEN_NOTHING;
 
     if(strcmp(buffer, "true") == 0 || strcmp(buffer, "false") == 0){ //Booleano
         types.specificType = TYPE_BOOL;

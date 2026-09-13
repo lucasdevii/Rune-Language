@@ -6,28 +6,38 @@
 
 #include "../../data/token.h"
 #include "../../data/parser_datas/abstract_sintax_tree.h"
+#include "../../data/parser_datas/AST_node_types.h"
+
+ASTNodeType ifStartWithType(Token *current);
+ASTNodeType ifHasIdentifier(Token *current);
+
+int ifEndsNow(Token *current);
+int ifHasAssignment(Token *current);
+int ifHasValue(Token *current);
+
+
 
 //FEITO PARA RETORNAR O TIPO DE AST QUE O PARSER TEM QUE UTILIZAR PARA O COMANDO
 
 ASTNodeType getASTType(Token *current){
-    return ifStartsWithType(current);
+    return ifStartWithType(current);
 }
 
-ASTNodeType ifStartsWithType(Token *current){
-    if(current->geralType == TYPE){
-        ASTNodeType astType = ifNextIsIdentifier(current->nextNode);
+ASTNodeType ifStartWithType(Token *current){
+    if(current->geralType == TYPE){ 
+        ASTNodeType astType = ifHasIdentifier(current->nextNode);
         
-        if(astType != NOTHING){
+        if(astType != NODE_NOTHING){
              return astType;
         }
         else{
-            printf("ERRO DE SINTAXE: %d não atribui o seu tipo a nada.");
+            printf("ERRO DE SINTAXE: %s não atribui o seu tipo a nada.", current->text);
 
             exit(EXIT_FAILURE);
         }
     }
     
-    return NOTHING;
+    return NODE_NOTHING;
 }
 
 ASTNodeType ifHasIdentifier(Token *current){
@@ -41,7 +51,7 @@ ASTNodeType ifHasIdentifier(Token *current){
         //if(ifEntryKeys){}
     }
 
-    return 0;
+    return NODE_NOTHING;
 }
 
 int ifHasAssignment(Token *current){

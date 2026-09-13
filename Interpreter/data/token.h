@@ -2,7 +2,7 @@
 #define TOKEN_H
 
 typedef enum TokenTypes {
-    NOTHING,           // Token nulo — fim do input ou ausência de token
+    TOKEN_NOTHING,           // Token nulo — fim do input ou ausência de token
 
     // TOKENS GERAIS
     VALUE,             // Literal (número, string, etc.)
@@ -49,7 +49,7 @@ typedef struct TokenTypePair { //Para retornar dois tipos de token ao mesmo temp
 
 static inline const char *token_type_name(TokenTypes t) {
     switch (t) {
-        case NOTHING:           return "NOTHING";
+        case TOKEN_NOTHING:     return "TOKEN_NOTHING";
         case VALUE:             return "VALUE";
         case NAME:              return "NAME";
         case TYPE:              return "TYPE";

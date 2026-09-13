@@ -4,10 +4,9 @@
 #include <stdlib.h>
 
 #include "abstract_sintax_tree.h"
-#include "../../src/parser_helpers/AST_type_rules.c"
 
 typedef enum {
-    NOTHING,
+    NODE_NOTHING,
     
     VARIABLE_DECLARATION,
     FUNCTION_DECLARATION,
