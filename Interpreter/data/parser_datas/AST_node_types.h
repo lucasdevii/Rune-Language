@@ -4,8 +4,11 @@
 #include <stdlib.h>
 
 #include "abstract_sintax_tree.h"
+#include "../../src/parser_helpers/AST_type_rules.c"
 
 typedef enum {
+    NOTHING,
+    
     VARIABLE_DECLARATION,
     FUNCTION_DECLARATION,
     FUNCTION_CALL,
@@ -18,9 +21,3 @@ typedef struct {
     ASTNodeType type;
     ParserRule *rule;
 } SyntaxModels;
-
-SyntaxModels typesCandidates[] = {
-    { FUNCTION_DECLARATION, &functionDeclarationRule },
-    { FUNCTION_CALL,        &functionCallRule },
-    { VARIABLE_DECLARATION, &variableDeclarationRule }
-};
