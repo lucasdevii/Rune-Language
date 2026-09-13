@@ -99,6 +99,8 @@ void tokenTypeVerifications(char *buffer, TokenTypes *generalType, TokenTypes *s
     }
     if(!stopChecking) {
         printf("Erro: assinatura ('%s') desconhecida \n", buffer);
+        
+        exit(EXIT_FAILURE);
     }
 }
 
@@ -110,7 +112,7 @@ int checkVariablesComponet(char *buffer, TokenTypes *generalType, TokenTypes *sp
     if(pair.generalType == NOTHING && pair.specificType == NOTHING){
         printf("Erro: Token desconhecido '%s'\n", buffer);
 
-        return 0;
+        exit(EXIT_FAILURE);
     }
 
     return 1;
@@ -176,7 +178,7 @@ int checkOperators(char character, FILE *file, TokenTypes *generalType, TokenTyp
 
 int checkPunctuator(char character, TokenTypes *generalType, TokenTypes *specificType){
     if(character == ';'){
-        *specificType = DELIMITER;
+        *specificType = SEMICOLON;
     }
     else if(character == '('){
         *specificType = OPEN_PARENTHESIS;

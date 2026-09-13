@@ -3,15 +3,18 @@ CFLAGS = -g
 SRCDIR = src
 OBJDIR = compiled
 
-OBJS = $(OBJDIR)/main.o $(OBJDIR)/lexer.o $(OBJDIR)/parser.o
+SRCS = $(shell find $(SRCDIR) -name '*.c')
+OBJS = $(SRCS:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
 
 rune: $(OBJS)
 	$(CC) -o $@ $(OBJS)
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.c
+	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f $(OBJDIR)/*.o rune
+	rm -rf $(OBJDIR)
+	rm -f rune
 
-.PHONY: clean   
+.PHONY: clean
