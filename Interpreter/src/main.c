@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
-#include <sys/stat.h> // Biblioteca necessária para metadados
 #include <time.h> 
 #include <string.h>
 
