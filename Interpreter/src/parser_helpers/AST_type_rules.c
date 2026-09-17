@@ -8,15 +8,26 @@
 #include "../../data/parser_datas/AST_node.h"
 
 ASTNodeType ifStartWithType(Token *current);
+
 ASTNodeType ifHasIdentifier(Token *current);
 
-int ifEndsNow(Token *current);
+int ifEnds(Token *current);
 int ifHasAssignment(Token *current);
 int ifHasValue(Token *current);
+int ifHasEntryAndCloseKeys(Token *current);
 
 //FEITO PARA RETORNAR O TIPO DE AST QUE O PARSER TEM QUE UTILIZAR PARA O COMANDO
 ASTNodeType getASTType(Token *current){
-    return ifStartWithType(current);
+    ASTNodeType type = ifStartWithType(current);
+
+    if(type == AST_NOTHING){
+        type = ifHasIdentifier(current);
+    }
+    else{
+        printf("ERRO DE SINTAXE: tipo de AST não conhecida");
+    }
+
+    return type;
 }
 
 ASTNodeType ifStartWithType(Token *current){
@@ -39,11 +50,15 @@ ASTNodeType ifStartWithType(Token *current){
 ASTNodeType ifHasIdentifier(Token *current){
     if(current->specificType == IDENTIFIER){
 
-        if(ifEndsNow(current->nextNode) || ifHasAssignment(current->nextNode)){
+        if(ifHasEntryAndCloseKeys(current->nextNode)){
+            return AST_CALL;
+        }
+
+        if(ifEnds(current->nextNode) || ifHasAssignment(current->nextNode)){
             return AST_VARIABLE;
         }
 
-        //PODE SER UMA FUNÇÃO TBM
+        //PODE SER A DECLARAÇÃO DE UMA FUNÇÃO TBM
         //if(ifEntryKeys){}
     }
 
@@ -73,7 +88,15 @@ int ifHasValue(Token *current){
     return 0;
 }
 
-int ifEndsNow(Token *current){
+int ifHasEntryAndCloseKeys(Token *current){
+    if(current->specificType == OPEN_PARENTHESIS){
+        return 1;
+    }
+
+    return 0;
+}
+
+int ifEnds(Token *current){
     if(current->specificType == SEMICOLON){
         return 1;
     }

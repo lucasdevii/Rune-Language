@@ -18,9 +18,8 @@ int parser(Token *head) {
 
         if (node->type == AST_NOTHING) {
             printf("ERRO DE SINTAXE: comando não suportado: %s\n", current->text);
-            free(node);
             
-            return 0;
+            exit(EXIT_FAILURE);
         }
 
         //Passa pelos tokens, e monta a arvore de acordo com seu tipo
@@ -40,54 +39,68 @@ void printASTNode(ASTNode *node)
     printf("AST Type: ");
 
     switch (node->type) {
+
         case AST_VARIABLE:
             printf("VARIABLE_DECLARATION\n");
+
+            printf("Variable Type: ");
+
+            switch (node->variable.varType) {
+                case TYPE_INT:
+                    printf("int\n");
+                    break;
+
+                case TYPE_TEXT:
+                    printf("text\n");
+                    break;
+
+                case TYPE_BOOL:
+                    printf("bool\n");
+                    break;
+
+                case TYPE_FLOAT:
+                    printf("float\n");
+                    break;
+
+                default:
+                    printf("UNKNOWN\n");
+                    break;
+            }
+
+            printf("Identifier: %s\n", node->variable.identifier);
+
+            printf("Value: ");
+
+            switch (node->variable.varType) {
+                case TYPE_INT:
+                    printf("%d\n", node->variable.value.intValue);
+                    break;
+
+                case TYPE_TEXT:
+                    printf("%s\n", node->variable.value.text);
+                    break;
+
+                default:
+                    printf("Unsupported value type\n");
+                    break;
+            }
+
             break;
+
+
+        case AST_CALL:
+            printf("FUNCTION_CALL\n");
+
+            printf("Function Name: %s\n", node->call.name);
+
+            // Futuramente:
+            // printf("Parameters: %d\n", node->call.parameterCount);
+
+            break;
+
 
         default:
             printf("UNKNOWN\n");
-            break;
-    }
-
-    printf("Variable Type: ");
-
-    switch (node->variable.varType) {
-        case TYPE_INT:
-            printf("int\n");
-            break;
-
-        case TYPE_TEXT:
-            printf("text\n");
-            break;
-
-        case TYPE_BOOL:
-            printf("bool\n");
-            break;
-
-        case TYPE_FLOAT:
-            printf("float\n");
-            break;
-
-        default:
-            printf("UNKNOWN\n");
-            break;
-    }
-
-    printf("Identifier: %s\n", node->variable.identifier);
-
-    printf("Value: ");
-
-    switch (node->variable.varType) {
-        case TYPE_INT:
-            printf("%d\n", node->variable.value.intValue);
-            break;
-
-        case TYPE_TEXT:
-            printf("%s\n", node->variable.value.text);
-            break;
-
-        default:
-            printf("Unsupported value type\n");
             break;
     }
 
