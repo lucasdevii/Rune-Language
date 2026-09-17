@@ -3,8 +3,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "abstract_sintax_tree.h"
-
 typedef enum {
     NODE_NOTHING,
     
@@ -14,9 +12,15 @@ typedef enum {
     BINARY_EXPRESSION
 } ASTNodeType;
 
-typedef int (*ParserRule)(Token *current);
+typedef struct{
+    ASTNodeType ASTtype;
+    
+    TokenTypes varType;
+    char *identifier;
 
-typedef struct {
-    ASTNodeType type;
-    ParserRule *rule;
-} SyntaxModels;
+    union{
+        int intValue;
+        char *text;
+    } data;
+} ASTNode; 
+

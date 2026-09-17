@@ -5,8 +5,7 @@
 #include <string.h>
 
 #include "../../data/token.h"
-#include "../../data/parser_datas/abstract_sintax_tree.h"
-#include "../../data/parser_datas/AST_node_types.h"
+#include "../../data/parser_datas/AST_node.h"
 
 ASTNodeType ifStartWithType(Token *current);
 ASTNodeType ifHasIdentifier(Token *current);
@@ -15,10 +14,7 @@ int ifEndsNow(Token *current);
 int ifHasAssignment(Token *current);
 int ifHasValue(Token *current);
 
-
-
 //FEITO PARA RETORNAR O TIPO DE AST QUE O PARSER TEM QUE UTILIZAR PARA O COMANDO
-
 ASTNodeType getASTType(Token *current){
     return ifStartWithType(current);
 }
@@ -41,7 +37,7 @@ ASTNodeType ifStartWithType(Token *current){
 }
 
 ASTNodeType ifHasIdentifier(Token *current){
-    if(current->geralType == IDENTIFIER){
+    if(current->specificType == IDENTIFIER){
 
         if(ifEndsNow(current->nextNode) || ifHasAssignment(current->nextNode)){
             return VARIABLE_DECLARATION;
@@ -85,3 +81,24 @@ int ifEndsNow(Token *current){
     return 0;
 }
 
+
+//RETORNA ONDE O VALOR DO TOKEN DEVE SE ENCAIXAR NA AST
+
+// -------  MACRO 
+#define signInAST(node, value) _Generic((value), \
+    int: signInASTInt, \
+    float: signInASTFloat, \
+    char*: signInASTText \
+)(node, value)
+
+void signInASTInt(ASTNode *node, int value){
+    node->data.intValue = value;
+}
+
+void signInASTFloat(ASTNode *node, float value){
+
+}
+
+void signInASTText(ASTNode *node, char *value){
+    node->data.text = value;
+}

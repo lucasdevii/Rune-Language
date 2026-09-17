@@ -6,6 +6,7 @@
 
 #include "../data/lexer.h"
 #include "../data/token.h"
+#include "../data/parser.h"
 
 //pré-inicialização
 
@@ -52,6 +53,8 @@ void readArchive(FILE* file){
     lexer(file, &head, &tail);
 
     fclose(file);
+
+    parser(head);
 
     Token *current = head;
     while (current != NULL) {
