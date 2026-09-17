@@ -14,11 +14,12 @@ int parser(Token *head) {
     ASTNode *node = root;
 
     while (current != NULL) { //Passa por todos os comandos.
-        node->ASTtype = getASTType(current); //Passa pelos tokens e filtra seu tipo
+        node->type = getASTType(current); //Passa pelos tokens e filtra seu tipo
 
-        if (node->ASTtype == NODE_NOTHING) {
+        if (node->type == AST_NOTHING) {
             printf("ERRO DE SINTAXE: comando não suportado: %s\n", current->text);
             free(node);
+            
             return 0;
         }
 
@@ -38,8 +39,8 @@ void printASTNode(ASTNode *node)
 
     printf("AST Type: ");
 
-    switch (node->ASTtype) {
-        case VARIABLE_DECLARATION:
+    switch (node->type) {
+        case AST_VARIABLE:
             printf("VARIABLE_DECLARATION\n");
             break;
 
@@ -50,7 +51,7 @@ void printASTNode(ASTNode *node)
 
     printf("Variable Type: ");
 
-    switch (node->varType) {
+    switch (node->variable.varType) {
         case TYPE_INT:
             printf("int\n");
             break;
@@ -72,17 +73,17 @@ void printASTNode(ASTNode *node)
             break;
     }
 
-    printf("Identifier: %s\n", node->identifier);
+    printf("Identifier: %s\n", node->variable.identifier);
 
     printf("Value: ");
 
-    switch (node->varType) {
+    switch (node->variable.varType) {
         case TYPE_INT:
-            printf("%d\n", node->data.intValue);
+            printf("%d\n", node->variable.value.intValue);
             break;
 
         case TYPE_TEXT:
-            printf("%s\n", node->data.text);
+            printf("%s\n", node->variable.value.text);
             break;
 
         default:

@@ -11,9 +11,9 @@
 void checkVariableDeclaration(Token **current, ASTNode *node);
 
 void fillNodeWithNewTokens(Token **current, ASTNode *node){
-    ASTNodeType type = node->ASTtype;
+    ASTNodeType type = node->type;
 
-    if(type == VARIABLE_DECLARATION){
+    if(type == AST_VARIABLE){
         checkVariableDeclaration(current, node);
     }
 }
@@ -22,13 +22,13 @@ void checkVariableDeclaration(Token **current, ASTNode *node)
 {
     Token *token = *current;
 
-    if(node->ASTtype == VARIABLE_DECLARATION){
+    if(node->type == AST_VARIABLE){
         // TYPE
-        node->varType = token->specificType;
+        node->variable.varType = token->specificType;
 
         // IDENTIFIER
         token = token->nextNode;
-        node->identifier = strdup(token->text);
+        node->variable.identifier = strdup(token->text);
 
         // ASSIGNMENT
         token = token->nextNode;
@@ -42,12 +42,12 @@ void checkVariableDeclaration(Token **current, ASTNode *node)
         // VALUE
         token = token->nextNode;
 
-        if (node->varType == TYPE_INT) {
-            node->data.intValue = atoi(token->text);
+        if (node->variable.varType == TYPE_INT) {
+            node->variable.value.intValue = atoi(token->text);
         }
 
-        else if (node->varType == TYPE_TEXT) {
-            node->data.text = strdup(token->text);
+        else if (node->variable.varType == TYPE_TEXT) {
+            node->variable.value.text = strdup(token->text);
         }
 
         else {
@@ -68,4 +68,8 @@ void checkVariableDeclaration(Token **current, ASTNode *node)
 
         return;
     }
+}
+
+void checkFunctionCall(){
+    
 }

@@ -2,25 +2,60 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "../token.h"
 
 typedef enum {
-    NODE_NOTHING,
-    
-    VARIABLE_DECLARATION,
-    FUNCTION_DECLARATION,
-    FUNCTION_CALL,
-    BINARY_EXPRESSION
+    AST_NOTHING,
+    AST_VARIABLE,
+    AST_FUNCTION,
+    AST_BINARY,
+    AST_CALL,
+    AST_LITERAL
 } ASTNodeType;
 
-typedef struct{
-    ASTNodeType ASTtype;
-    
-    TokenTypes varType;
-    char *identifier;
+typedef struct ASTNode ASTNode;
 
-    union{
-        int intValue;
-        char *text;
-    } data;
-} ASTNode; 
+struct ASTNode {
+    ASTNodeType type;
+
+    union {
+        struct {
+            TokenTypes varType;
+            char *identifier;
+
+            union {
+                int intValue;
+                char *text;
+            } value;
+
+        } variable;
+
+        struct {
+            char *name;
+            ASTNode *body;
+        } function;
+
+        struct {
+            ASTNode *left;
+            ASTNode *right;
+            TokenTypes operator;
+        } binary;
+
+        struct {
+            char *name;
+            ASTNode **arguments;
+            int argumentCount;
+        } call;
+
+        struct {
+            TokenTypes type;
+
+            union {
+                int intValue;
+                char *text;
+            } value;
+
+        } literal;
+    };
+};
 

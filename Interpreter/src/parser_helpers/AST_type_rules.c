@@ -23,7 +23,7 @@ ASTNodeType ifStartWithType(Token *current){
     if(current->geralType == TYPE){ 
         ASTNodeType astType = ifHasIdentifier(current->nextNode);
         
-        if(astType != NODE_NOTHING){
+        if(astType != AST_NOTHING){
              return astType;
         }
         else{
@@ -33,21 +33,21 @@ ASTNodeType ifStartWithType(Token *current){
         }
     }
     
-    return NODE_NOTHING;
+    return AST_NOTHING;
 }
 
 ASTNodeType ifHasIdentifier(Token *current){
     if(current->specificType == IDENTIFIER){
 
         if(ifEndsNow(current->nextNode) || ifHasAssignment(current->nextNode)){
-            return VARIABLE_DECLARATION;
+            return AST_VARIABLE;
         }
 
         //PODE SER UMA FUNÇÃO TBM
         //if(ifEntryKeys){}
     }
 
-    return NODE_NOTHING;
+    return AST_NOTHING;
 }
 
 int ifHasAssignment(Token *current){
@@ -92,7 +92,7 @@ int ifEndsNow(Token *current){
 )(node, value)
 
 void signInASTInt(ASTNode *node, int value){
-    node->data.intValue = value;
+    node->variable.value.intValue = value;
 }
 
 void signInASTFloat(ASTNode *node, float value){
@@ -100,5 +100,5 @@ void signInASTFloat(ASTNode *node, float value){
 }
 
 void signInASTText(ASTNode *node, char *value){
-    node->data.text = value;
+    node->variable.value.text = value;
 }
