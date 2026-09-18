@@ -95,9 +95,14 @@ void ifFunctionCall(Token **current, ASTNode *node)
 
     token = token->nextNode;
 
-    if(token->specificType == IDENTIFIER || token->geralType == VALUE){
-        // DEPOIS:
-        // construir AST dos parâmetros
+    if(token != NULL && (token->specificType == IDENTIFIER || token->geralType == VALUE)){
+        while(
+            token != NULL && 
+            (token->specificType == IDENTIFIER || token->geralType == VALUE)
+        ){
+            printf("PARAMETRO: %s\n", token->text);
+            token = token->nextNode;
+        }
     }
 
     if(token->specificType != CLOSE_PARENTHESIS){

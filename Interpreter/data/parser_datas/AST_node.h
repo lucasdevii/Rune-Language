@@ -43,8 +43,7 @@ struct ASTNode {
 
         struct {
             char *name;
-            ASTNode **arguments;
-            int argumentCount;
+            ASTNode *arguments;
         } call;
 
         struct {
