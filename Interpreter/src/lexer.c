@@ -6,20 +6,20 @@
 #include "../data/token.h"
 
 //PRÉ INICIALIZAÇÃO DE FUNÇÕES
-void addToken(Token **head, Token **tail, char *text, TokenTypes generalType, TokenTypes specificType);
-void tokenTypeVerifications(char *buffer, TokenTypes *generalType, TokenTypes *specificType);
+void AddToken(Token **head, Token **tail, char *text, TokenTypes generalType, TokenTypes specificType);
+void TokenTypeVerifications(char *buffer, TokenTypes *generalType, TokenTypes *specificType);
 
-int checkPrimitiveTypes(char *buffer, TokenTypes *generalType, TokenTypes *specificType);
+int CheckPrimitiveTypes(char *buffer, TokenTypes *generalType, TokenTypes *specificType);
 
-int checkVariablesComponet(char *buffer, TokenTypes *generalType, TokenTypes *specificType);
+int CheckVariablesComponent(char *buffer, TokenTypes *generalType, TokenTypes *specificType);
 
-int checkSpecialTokens(char character, char* buffer, FILE *file, TokenTypes *generalType, TokenTypes *specificType);
-int checkPunctuator(char character, TokenTypes *generalType, TokenTypes *specificType);
-int checkOperators(char character, FILE *file, TokenTypes *generalType, TokenTypes *specificType);
+int CheckSpecialTokens(char character, char* buffer, FILE *file, TokenTypes *generalType, TokenTypes *specificType);
+int CheckPunctuator(char character, TokenTypes *generalType, TokenTypes *specificType);
+int CheckOperators(char character, FILE *file, TokenTypes *generalType, TokenTypes *specificType);
 
-TokenTypePair getType(char *buffer);
+TokenTypePair GetType(char *buffer);
 
-void lexer(FILE *file, Token **head, Token **tail){
+void Lexer(FILE *file, Token **head, Token **tail){
     char *buffer = calloc(15, sizeof(char));
     int length = 0;
     
@@ -30,7 +30,7 @@ void lexer(FILE *file, Token **head, Token **tail){
         TokenTypes specificSpecialTokenType = TOKEN_NOTHING;
         TokenTypes generalSpecialTokenType = TOKEN_NOTHING;
 
-        int isSpecialToken = checkSpecialTokens(c, buffer, file, &generalSpecialTokenType, &specificSpecialTokenType);
+        int isSpecialToken = CheckSpecialTokens(c, buffer, file, &generalSpecialTokenType, &specificSpecialTokenType);
         
         if (isspace(c) || isSpecialToken) {
 
@@ -38,9 +38,9 @@ void lexer(FILE *file, Token **head, Token **tail){
                 TokenTypes specificType = TOKEN_NOTHING;
                 TokenTypes generalType = TOKEN_NOTHING;
 
-                tokenTypeVerifications(buffer, &generalType, &specificType);
+                TokenTypeVerifications(buffer, &generalType, &specificType);
 
-                addToken(head, tail, buffer, generalType, specificType);
+                AddToken(head, tail, buffer, generalType, specificType);
 
                 buffer[0] = '\0';
                 length = 0;
@@ -49,7 +49,7 @@ void lexer(FILE *file, Token **head, Token **tail){
             if (isSpecialToken) {
                 char SpecialTokenBuffer[2] = {c, '\0'};
 
-                addToken(
+                AddToken(
                     head,
                     tail,
                     SpecialTokenBuffer,
@@ -72,7 +72,7 @@ void lexer(FILE *file, Token **head, Token **tail){
     free(buffer);
 }
 
-void addToken(Token **head, Token **tail, char *text, TokenTypes generalType, TokenTypes specificType) {
+void AddToken(Token **head, Token **tail, char *text, TokenTypes generalType, TokenTypes specificType) {
     Token *newToken = malloc(sizeof(Token));
     newToken->text = strdup(text);
     newToken->nextNode = NULL;
@@ -89,13 +89,13 @@ void addToken(Token **head, Token **tail, char *text, TokenTypes generalType, To
 }
 
 
-void tokenTypeVerifications(char *buffer, TokenTypes *generalType, TokenTypes *specificType){ //PEga o token e faz verificações
+void TokenTypeVerifications(char *buffer, TokenTypes *generalType, TokenTypes *specificType){ //PEga o token e faz verificações
     int stopChecking = 0;
 
-    stopChecking = checkPrimitiveTypes(buffer, generalType, specificType); 
+    stopChecking = CheckPrimitiveTypes(buffer, generalType, specificType); 
 
     if(!stopChecking) {
-        stopChecking = checkVariablesComponet(buffer, generalType, specificType);
+        stopChecking = CheckVariablesComponent(buffer, generalType, specificType);
     }
     if(!stopChecking) {
         printf("Erro: assinatura ('%s') desconhecida \n", buffer);
@@ -104,8 +104,8 @@ void tokenTypeVerifications(char *buffer, TokenTypes *generalType, TokenTypes *s
     }
 }
 
-int checkVariablesComponet(char *buffer, TokenTypes *generalType, TokenTypes *specificType){
-    TokenTypePair pair = getType(buffer);
+int CheckVariablesComponent(char *buffer, TokenTypes *generalType, TokenTypes *specificType){
+    TokenTypePair pair = GetType(buffer);
     *generalType = pair.generalType;
     *specificType = pair.specificType;
 
@@ -118,7 +118,7 @@ int checkVariablesComponet(char *buffer, TokenTypes *generalType, TokenTypes *sp
     return 1;
 }
 
-int checkPrimitiveTypes(char *buffer, TokenTypes *generalType, TokenTypes *specificType){
+int CheckPrimitiveTypes(char *buffer, TokenTypes *generalType, TokenTypes *specificType){
     if(strcmp(buffer, "int") == 0){
         *specificType = TYPE_INT;
     }
@@ -140,7 +140,7 @@ int checkPrimitiveTypes(char *buffer, TokenTypes *generalType, TokenTypes *speci
     return 0;
 }
 
-int checkOperators(char character, FILE *file, TokenTypes *generalType, TokenTypes *specificType){
+int CheckOperators(char character, FILE *file, TokenTypes *generalType, TokenTypes *specificType){
     char nextCharacter = fgetc(file); //Pega o proximo caracter para verificações
 
     if(character == '=' && nextCharacter == '='){
@@ -176,7 +176,7 @@ int checkOperators(char character, FILE *file, TokenTypes *generalType, TokenTyp
     return 0;
 }
 
-int checkPunctuator(char character, TokenTypes *generalType, TokenTypes *specificType){
+int CheckPunctuator(char character, TokenTypes *generalType, TokenTypes *specificType){
     if(character == ';'){
         *specificType = SEMICOLON;
     }
@@ -202,15 +202,15 @@ int checkPunctuator(char character, TokenTypes *generalType, TokenTypes *specifi
     return 0;
 }
 
-int checkSpecialTokens(char character, char* buffer, FILE *file, TokenTypes *generalType, TokenTypes *specificType){
-    if(checkOperators(character, file, generalType, specificType) || checkPunctuator(character, generalType, specificType)){
+int CheckSpecialTokens(char character, char* buffer, FILE *file, TokenTypes *generalType, TokenTypes *specificType){
+    if(CheckOperators(character, file, generalType, specificType) || CheckPunctuator(character, generalType, specificType)){
         return 1;
     }
 
     return 0;
 }
 
-TokenTypePair getType(char *buffer){
+TokenTypePair GetType(char *buffer){
     TokenTypePair types;
 
     types.specificType = TOKEN_NOTHING;

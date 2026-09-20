@@ -1,3 +1,3 @@
 #include "token.h"
 
-void lexer(FILE *file, Token **head, Token **tail);
+void Lexer(FILE *file, Token **head, Token **tail);

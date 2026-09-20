@@ -10,8 +10,8 @@
 
 //pré-inicialização
 
-FILE* getArchive(char *caminho);
-void readArchive(FILE *file);
+FILE* GetArchive(char *caminho);
+void ReadArchive(FILE *file);
 
 int main(int argc, char *argv[]){
     if (argc < 2) {
@@ -23,10 +23,10 @@ int main(int argc, char *argv[]){
 
     printf("%s %s \n", argv[0], argv[1]);
     
-    FILE *file = getArchive(path);
+    FILE *file = GetArchive(path);
 
     if(file != NULL){
-        readArchive(file);
+        ReadArchive(file);
     }
 
     return 0;
@@ -34,7 +34,7 @@ int main(int argc, char *argv[]){
 
 //Funções
 
-FILE* getArchive(char *caminho){
+FILE* GetArchive(char *caminho){
     FILE *file = fopen(caminho, "r");
     
     
@@ -46,19 +46,19 @@ FILE* getArchive(char *caminho){
     return file;
 }
 
-void readArchive(FILE* file){
+void ReadArchive(FILE* file){
     struct Token *head = NULL;
     struct Token *tail = NULL;
 
-    lexer(file, &head, &tail);
+    Lexer(file, &head, &tail);
 
     fclose(file);
 
-    parser(head);
+    Parser(head);
 
     Token *current = head;
     while (current != NULL) {
-        printf("%s (%s)\n", current->text, token_type_name(current->specificType));
+        printf("%s (%s)\n", current->text, TokenTypeName(current->specificType));
         Token *temp = current;
         current = current->nextNode;
         free(temp->text);

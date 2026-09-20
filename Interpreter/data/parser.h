@@ -1,6 +1,6 @@
 #include "token.h"
 #include "parser_datas/AST_node.h"
 
-ASTNodeType getASTType(Token *current);
-void fillNodeWithNewTokens(Token **current, ASTNode *node);
-int parser(Token *head);
+ASTNodeType GetASTType(Token *current);
+void FillNodeWithNewTokens(Token **current, ASTNode *node);
+int Parser(Token *head);

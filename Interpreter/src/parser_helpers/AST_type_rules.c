@@ -7,21 +7,21 @@
 #include "../../data/token.h"
 #include "../../data/parser_datas/AST_node.h"
 
-ASTNodeType ifStartWithType(Token *current);
+ASTNodeType IfStartWithType(Token *current);
 
-ASTNodeType ifHasIdentifier(Token *current);
+ASTNodeType IfHasIdentifier(Token *current);
 
-int ifEnds(Token *current);
-int ifHasAssignment(Token *current);
-int ifHasValue(Token *current);
-int ifHasEntryAndCloseKeys(Token *current);
+int IfEnds(Token *current);
+int IfHasAssignment(Token *current);
+int IfHasValue(Token *current);
+int IfHasEntryAndCloseKeys(Token *current);
 
 //FEITO PARA RETORNAR O TIPO DE AST QUE O PARSER TEM QUE UTILIZAR PARA O COMANDO
-ASTNodeType getASTType(Token *current){
-    ASTNodeType type = ifStartWithType(current);
+ASTNodeType GetASTType(Token *current){
+    ASTNodeType type = IfStartWithType(current);
 
     if(type == AST_NOTHING){
-        type = ifHasIdentifier(current);
+        type = IfHasIdentifier(current);
     }
     else{
         printf("ERRO DE SINTAXE: tipo de AST não conhecida");
@@ -30,9 +30,9 @@ ASTNodeType getASTType(Token *current){
     return type;
 }
 
-ASTNodeType ifStartWithType(Token *current){
+ASTNodeType IfStartWithType(Token *current){
     if(current->geralType == TYPE){ 
-        ASTNodeType astType = ifHasIdentifier(current->nextNode);
+        ASTNodeType astType = IfHasIdentifier(current->nextNode);
         
         if(astType != AST_NOTHING){
              return astType;
@@ -47,14 +47,14 @@ ASTNodeType ifStartWithType(Token *current){
     return AST_NOTHING;
 }
 
-ASTNodeType ifHasIdentifier(Token *current){
+ASTNodeType IfHasIdentifier(Token *current){
     if(current->specificType == IDENTIFIER){
 
-        if(ifHasEntryAndCloseKeys(current->nextNode)){
+        if(IfHasEntryAndCloseKeys(current->nextNode)){
             return AST_CALL;
         }
 
-        if(ifEnds(current->nextNode) || ifHasAssignment(current->nextNode)){
+        if(IfEnds(current->nextNode) || IfHasAssignment(current->nextNode)){
             return AST_VARIABLE;
         }
 
@@ -65,9 +65,9 @@ ASTNodeType ifHasIdentifier(Token *current){
     return AST_NOTHING;
 }
 
-int ifHasAssignment(Token *current){
+int IfHasAssignment(Token *current){
     if(current->specificType == ASSIGNMENT){
-        if(ifHasValue(current->nextNode)){
+        if(IfHasValue(current->nextNode)){
             return 1;
         }
         else{
@@ -80,7 +80,7 @@ int ifHasAssignment(Token *current){
     return 0;
 }
 
-int ifHasValue(Token *current){
+int IfHasValue(Token *current){
     if(current->geralType == VALUE){
         return 1;
     }
@@ -88,7 +88,7 @@ int ifHasValue(Token *current){
     return 0;
 }
 
-int ifHasEntryAndCloseKeys(Token *current){
+int IfHasEntryAndCloseKeys(Token *current){
     if(current->specificType == OPEN_PARENTHESIS){
         return 1;
     }
@@ -96,7 +96,7 @@ int ifHasEntryAndCloseKeys(Token *current){
     return 0;
 }
 
-int ifEnds(Token *current){
+int IfEnds(Token *current){
     if(current->specificType == SEMICOLON){
         return 1;
     }
@@ -108,20 +108,20 @@ int ifEnds(Token *current){
 //RETORNA ONDE O VALOR DO TOKEN DEVE SE ENCAIXAR NA AST
 
 // -------  MACRO 
-#define signInAST(node, value) _Generic((value), \
-    int: signInASTInt, \
-    float: signInASTFloat, \
-    char*: signInASTText \
+#define SignInAST(node, value) _Generic((value), \
+    int: SignInASTInt, \
+    float: SignInASTFloat, \
+    char*: SignInASTText \
 )(node, value)
 
-void signInASTInt(ASTNode *node, int value){
+void SignInASTInt(ASTNode *node, int value){
     node->variable.value.intValue = value;
 }
 
-void signInASTFloat(ASTNode *node, float value){
+void SignInASTFloat(ASTNode *node, float value){
 
 }
 
-void signInASTText(ASTNode *node, char *value){
+void SignInASTText(ASTNode *node, char *value){
     node->variable.value.text = value;
 }

@@ -47,7 +47,7 @@ typedef struct TokenTypePair { //Para retornar dois tipos de token ao mesmo temp
     TokenTypes specificType;
 } TokenTypePair;
 
-static inline const char *token_type_name(TokenTypes t) {
+static inline const char *TokenTypeName(TokenTypes t) {
     switch (t) {
         case TOKEN_NOTHING:     return "TOKEN_NOTHING";
         case VALUE:             return "VALUE";

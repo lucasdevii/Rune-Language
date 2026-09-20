@@ -5,16 +5,16 @@
 
 #include "../data/parser.h"
 
-void printASTNode(ASTNode *node);
+void PrintASTNode(ASTNode *node);
 
-int parser(Token *head) {
+int Parser(Token *head) {
     Token *current = head;
 
     ASTNode *root = calloc(1, sizeof(ASTNode)); //Ponteiro para o nó raiz da AST
     ASTNode *node = root;
 
     while (current != NULL) { //Passa por todos os comandos.
-        node->type = getASTType(current); //Passa pelos tokens e filtra seu tipo
+        node->type = GetASTType(current); //Passa pelos tokens e filtra seu tipo
 
         if (node->type == AST_NOTHING) {
             printf("ERRO DE SINTAXE: comando não suportado: %s\n", current->text);
@@ -24,15 +24,15 @@ int parser(Token *head) {
 
         //Passa pelos tokens, e monta a arvore de acordo com seu tipo
         //A função já move o ponteiro current para o inicio do proximo comando
-        fillNodeWithNewTokens(&current, node); 
+        FillNodeWithNewTokens(&current, node); 
 
-        printASTNode(node);
+        PrintASTNode(node);
     }
 
     return 1; 
 }
 
-void printASTNode(ASTNode *node)
+void PrintASTNode(ASTNode *node)
 {
     printf("\n========== AST NODE ==========\n");
 

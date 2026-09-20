@@ -8,21 +8,21 @@
 #include "../../data/lexer.h"
 #include "../../data/parser_datas/AST_node.h"
 
-void ifVariableDeclaration(Token **current, ASTNode *node);
-void ifFunctionCall(Token **current, ASTNode *node);
+void IfVariableDeclaration(Token **current, ASTNode *node);
+void IfFunctionCall(Token **current, ASTNode *node);
 
-void fillNodeWithNewTokens(Token **current, ASTNode *node){
+void FillNodeWithNewTokens(Token **current, ASTNode *node){
     ASTNodeType type = node->type;
 
     if(type == AST_VARIABLE){
-        ifVariableDeclaration(current, node);
+        IfVariableDeclaration(current, node);
     }
     else if(type == AST_CALL){
-        ifFunctionCall(current, node);
+        IfFunctionCall(current, node);
     }
 }
 
-void ifVariableDeclaration(Token **current, ASTNode *node)
+void IfVariableDeclaration(Token **current, ASTNode *node)
 {
     Token *token = *current;
 
@@ -70,7 +70,7 @@ void ifVariableDeclaration(Token **current, ASTNode *node)
     }
 }
 
-void ifFunctionCall(Token **current, ASTNode *node)
+void IfFunctionCall(Token **current, ASTNode *node)
 {
     Token *token = *current;
 
