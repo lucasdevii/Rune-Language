@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "../../data/parser_datas/AST_node.h"
 
@@ -47,7 +48,22 @@ void HashMapAdd(HashMap *map, ASTNode *value)
     map->nodes[bucketLocation] = informations;
 }
 
+ASTNode *HashMapGet(HashMap *map, const char* identifier){
+    int bucketIndex = Hash(identifier);
 
+    Entry *currentEntry = map->nodes[bucketIndex];
+
+    while(currentEntry != NULL){
+        if(strcmp(currentEntry->identifier, identifier) == 0){
+            return currentEntry->node;
+        }
+
+        currentEntry = currentEntry->next;
+    }
+
+    printf("ERRO: variavel \'%s\' não encontrada no HashMap\n", identifier);
+    exit(EXIT_FAILURE);
+}
 
 int Hash(const char *identifier){
     unsigned long hash = 0;
