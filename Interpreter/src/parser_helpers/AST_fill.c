@@ -101,6 +101,7 @@ void ifFunctionCall(Token **current, ASTNode *node)
             (token->specificType == IDENTIFIER || token->geralType == VALUE)
         ){
             printf("PARAMETRO: %s\n", token->text);
+                 
             token = token->nextNode;
         }
     }
