@@ -7,13 +7,19 @@
 #include "../data/lexer.h"
 #include "../data/token.h"
 #include "../data/parser.h"
+#include "../data/parser_datas/AST_node.h"
+#include "../data/interpreter.h"
 
 //pré-inicialização
 
 FILE* GetArchive(char *caminho);
-void ReadArchive(FILE *file);
+void ReadArchive(FILE *file, Token **headTokensList);
 
 int main(int argc, char *argv[]){
+    ASTList *headASTList = malloc(sizeof(ASTList));
+    headASTList->next = NULL;
+    headASTList->current = NULL;
+
     if (argc < 2) {
         printf("Uso: %s <caminho_do_arquivo>\n", argv[0]);
         return 1;
@@ -26,8 +32,27 @@ int main(int argc, char *argv[]){
     FILE *file = GetArchive(path);
 
     if(file != NULL){
-        ReadArchive(file);
+        Token *headTokensList = NULL;
+
+        ReadArchive(file, &headTokensList);
+        Parser(headTokensList, headASTList);
+
+        Token *current = headTokensList;
+        while (current != NULL) {
+            printf("%s (%s)\n", current->text, TokenTypeName(current->specificType));
+            Token *temp = current;
+            current = current->nextNode;
+            free(temp->text);
+            free(temp);
+        }
     }
+    else{
+        printf("ERRO: arquivo não encontrado");
+
+        exit(EXIT_FAILURE);
+    }
+
+    Interpreter(headASTList);
 
     return 0;
 }
@@ -46,24 +71,12 @@ FILE* GetArchive(char *caminho){
     return file;
 }
 
-void ReadArchive(FILE* file){
-    struct Token *head = NULL;
-    struct Token *tail = NULL;
+void ReadArchive(FILE* file, Token **headTokensList){
+    struct Token *tailTokensList = NULL;
 
-    Lexer(file, &head, &tail);
+    Lexer(file, headTokensList, &tailTokensList);
 
     fclose(file);
-
-    Parser(head);
-
-    Token *current = head;
-    while (current != NULL) {
-        printf("%s (%s)\n", current->text, TokenTypeName(current->specificType));
-        Token *temp = current;
-        current = current->nextNode;
-        free(temp->text);
-        free(temp);
-    }
 }
 
 

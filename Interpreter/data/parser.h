@@ -3,4 +3,4 @@
 
 ASTNodeType GetASTType(Token *current);
 void FillNodeWithNewTokens(Token **current, ASTNode *node);
-int Parser(Token *head);
+int Parser(Token *headTokenList, ASTList *headASTList);

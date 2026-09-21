@@ -13,7 +13,13 @@ typedef enum {
     AST_LITERAL
 } ASTNodeType;
 
+
 typedef struct ASTNode ASTNode;
+
+typedef struct {
+    ASTNode *current;
+    ASTNode *next;
+} ASTList;
 
 struct ASTNode {
     ASTNodeType type;

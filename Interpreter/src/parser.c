@@ -4,11 +4,12 @@
 #include <stdlib.h>
 
 #include "../data/parser.h"
+#include "../data/parser_datas/AST_node.h"
 
 void PrintASTNode(ASTNode *node);
 
-int Parser(Token *head) {
-    Token *current = head;
+int Parser(Token *headTokenList, ASTList *headASTList) {
+    Token *current = headTokenList;
 
     ASTNode *root = calloc(1, sizeof(ASTNode)); //Ponteiro para o nó raiz da AST
     ASTNode *node = root;

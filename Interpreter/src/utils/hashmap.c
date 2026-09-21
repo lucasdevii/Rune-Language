@@ -159,7 +159,6 @@ void ASTNodeFree(ASTNode *node)
 
             break;
 
-
         case AST_LITERAL:
             if (node->literal.type == TYPE_TEXT)
                 free(node->literal.value.text);
