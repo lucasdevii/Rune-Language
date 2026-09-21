@@ -10,11 +10,11 @@ void PrintASTNode(ASTNode *node);
 
 int Parser(Token *headTokenList, ASTList *headASTList) {
     Token *current = headTokenList;
-
-    ASTNode *root = calloc(1, sizeof(ASTNode)); //Ponteiro para o nó raiz da AST
-    ASTNode *node = root;
+    ASTList *tailASTList = headASTList;
 
     while (current != NULL) { //Passa por todos os comandos.
+        ASTNode *node = calloc(1, sizeof(ASTNode));
+
         node->type = GetASTType(current); //Passa pelos tokens e filtra seu tipo
 
         if (node->type == AST_NOTHING) {
@@ -26,6 +26,14 @@ int Parser(Token *headTokenList, ASTList *headASTList) {
         //Passa pelos tokens, e monta a arvore de acordo com seu tipo
         //A função já move o ponteiro current para o inicio do proximo comando
         FillNodeWithNewTokens(&current, node); 
+
+        //Adiciona um novo node na arvore de ASTs geral
+        tailASTList->current = node;
+
+        if (current != NULL) {
+            tailASTList->next = calloc(1, sizeof(ASTList));
+            tailASTList = tailASTList->next;
+        }
 
         PrintASTNode(node);
     }

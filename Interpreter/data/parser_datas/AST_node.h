@@ -16,10 +16,12 @@ typedef enum {
 
 typedef struct ASTNode ASTNode;
 
-typedef struct {
+typedef struct ASTList ASTList;
+
+struct ASTList {
     ASTNode *current;
-    ASTNode *next;
-} ASTList;
+    ASTList *next;
+};
 
 struct ASTNode {
     ASTNodeType type;
