@@ -61,8 +61,10 @@ ASTNode *HashMapGet(HashMap *map, const char* identifier){
         currentEntry = currentEntry->next;
     }
 
-    printf("ERRO: variavel \'%s\' não encontrada no HashMap\n", identifier);
-    exit(EXIT_FAILURE);
+    return NULL;
+
+    // printf("ERRO: variavel \'%s\' não encontrada no HashMap\n", identifier);
+    // exit(EXIT_FAILURE);
 }
 
 int HashMapRemove(HashMap *map, const char* identifier){
