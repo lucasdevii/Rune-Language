@@ -4,14 +4,15 @@
 
 #include "../../data/parser_datas/AST_node.h"
 
-typedef struct Entry {
+//Entry para as AST's
+typedef struct EntryASTS {
     char *identifier;
     ASTNode *node;
-    struct Entry *next;
-} Entry;
+    struct EntryASTS *next;
+} EntryASTS;
 
 typedef struct {
-    Entry *nodes[50];
+    EntryASTS *nodes[50];
 } HashMap;
 
 int Hash(const char *identifier);
@@ -29,7 +30,7 @@ void HashMapAdd(HashMap *map, ASTNode *value)
 
     int bucketLocation = Hash(text);
 
-    Entry *informations = malloc(sizeof(Entry));
+    EntryASTS *informations = malloc(sizeof(EntryASTS));
 
     informations->identifier = text;
     informations->node = value;
@@ -51,7 +52,7 @@ void HashMapAdd(HashMap *map, ASTNode *value)
 ASTNode *HashMapGet(HashMap *map, const char* identifier){
     int bucketIndex = Hash(identifier);
 
-    Entry *currentEntry = map->nodes[bucketIndex];
+    EntryASTS *currentEntry = map->nodes[bucketIndex];
 
     while(currentEntry != NULL){
         if(strcmp(currentEntry->identifier, identifier) == 0){
@@ -70,8 +71,8 @@ ASTNode *HashMapGet(HashMap *map, const char* identifier){
 int HashMapRemove(HashMap *map, const char* identifier){
     int bucketIndex = Hash(identifier);
 
-    Entry *currentEntry = map->nodes[bucketIndex];
-    Entry *beforeEntry = NULL;
+    EntryASTS *currentEntry = map->nodes[bucketIndex];
+    EntryASTS *beforeEntry = NULL;
 
     while(currentEntry != NULL){
         if(strcmp(currentEntry->identifier, identifier) == 0){
@@ -83,9 +84,6 @@ int HashMapRemove(HashMap *map, const char* identifier){
                 //Se não tiver nenhum antes, ele é o primeiro, ent apenas faz o inicio apontar para o proximo do removido
                 map->nodes[bucketIndex] = currentEntry->next;
             }
-
-            ASTNodeFree(currentEntry->node);
-            free(currentEntry);
 
             return 1;
         }
@@ -118,62 +116,3 @@ char *GetIdentifierVariable(ASTNode *ast){
         exit(EXIT_FAILURE);
     }
 }
-
-void ASTNodeFree(ASTNode *node)
-{
-    if (node == NULL)
-        return;
-
-    switch (node->type)
-    {
-        case AST_VARIABLE:
-            free(node->variable.identifier);
-
-            if (node->variable.varType == TYPE_TEXT)
-                free(node->variable.value.text);
-
-            break;
-
-
-        case AST_FUNCTION:
-            free(node->function.name);
-
-            // Se body for uma árvore
-            ASTNodeFree(node->function.body);
-
-            break;
-
-
-        case AST_BINARY:
-            // Primeiro libera os filhos
-            ASTNodeFree(node->binary.left);
-            ASTNodeFree(node->binary.right);
-
-            break;
-
-
-        case AST_CALL:
-            free(node->call.name);
-
-            // Argumentos
-            // Não lembro se é uma ast ou se é uma lista, dependendo do que seja é interessante aplicar uma abordagem diferente
-            ASTNodeFree(node->call.arguments);
-
-            break;
-
-        case AST_LITERAL:
-            if (node->literal.type == TYPE_TEXT)
-                free(node->literal.value.text);
-
-            break;
-
-
-        default:
-            break;
-    }
-
-    // libera o próprio node
-    free(node);
-}
-
-
