@@ -13,18 +13,18 @@ typedef struct EntryASTS {
 
 typedef struct {
     EntryASTS *nodes[50];
-} HashMap;
+} VariablesMap;
 
 int Hash(const char *identifier);
 char *GetIdentifierVariable(ASTNode *ast);
 
-HashMap *HashMapInit(){ //Inicializa o hashMap
-    HashMap *map = calloc(1, sizeof(HashMap));
+VariablesMap *VariablesMapInit(){ //Inicializa o VariablesMap
+    VariablesMap *map = calloc(1, sizeof(VariablesMap));
 
     return map;
 }
 
-void HashMapAdd(HashMap *map, ASTNode *value)
+void VariablesMapAdd(VariablesMap *map, ASTNode *value)
 {
     char *text = GetIdentifierVariable(value);
 
@@ -49,7 +49,7 @@ void HashMapAdd(HashMap *map, ASTNode *value)
     map->nodes[bucketLocation] = informations;
 }
 
-ASTNode *HashMapGet(HashMap *map, const char* identifier){
+ASTNode *VariablesMapGet(VariablesMap *map, const char* identifier){
     int bucketIndex = Hash(identifier);
 
     EntryASTS *currentEntry = map->nodes[bucketIndex];
@@ -64,11 +64,11 @@ ASTNode *HashMapGet(HashMap *map, const char* identifier){
 
     return NULL;
 
-    // printf("ERRO: variavel \'%s\' não encontrada no HashMap\n", identifier);
+    // printf("ERRO: variavel \'%s\' não encontrada no VariablesMap\n", identifier);
     // exit(EXIT_FAILURE);
 }
 
-int HashMapRemove(HashMap *map, const char* identifier){
+int VariablesMapRemove(VariablesMap *map, const char* identifier){
     int bucketIndex = Hash(identifier);
 
     EntryASTS *currentEntry = map->nodes[bucketIndex];

@@ -1,0 +1,1 @@
+int Hash(const char *identifier);

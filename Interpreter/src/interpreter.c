@@ -1,6 +1,6 @@
 #include "../data/interpreter.h"
 #include "../data/parser_datas/AST_node.h"
-#include "./utils/hashmap.c"
+#include "./utils/variables_map.c"
 
 static const char *ASTTypeName(ASTNodeType type)
 {
@@ -59,7 +59,7 @@ static void PrintASTBeingInterpreted(ASTNode *node, int index)
 
 void Interpreter(ASTList *headList){
 	ASTList *current = headList;
-	HashMap *variablesMap = HashMapInit();
+	VariablesMap *variablesMap = VariablesMapInit();
 	
 	int index = 0;
 
@@ -81,11 +81,11 @@ void Interpreter(ASTList *headList){
 	printf("\n=================================\n");
 }
 
-int CheckAST(ASTNode *current, HashMap *variablesMap){
+int CheckAST(ASTNode *current, VariablesMap *variablesMap){
 	if(current->type == AST_VARIABLE){
 		//tratar para valores em asts binarios e reduzir para apenas um 
 				
-		HashMapAdd(variablesMap, current);
+		VariablesMapAdd(variablesMap, current);
 	}
 	else if(current->type == AST_CALL){
 		
