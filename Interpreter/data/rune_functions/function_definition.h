@@ -5,5 +5,5 @@
 FunctionsMap *FunctionsMapInit(void);
 
 void RegisterRuneFunctions(){
-    FunctionsMapAdd(functionsMap, "show", show);
+    FunctionsMapAdd("show", show);
 }

@@ -1,3 +1,3 @@
-#include "../../../src/rune_functions/show.c"
+#include "../../parser_datas/AST_node.h"
 
-void show(char *text);
+void show(ASTNode *node);

@@ -1,22 +1,9 @@
+#include "../../data/utils/variables_map.h"
+#include "../../data/utils/hash.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include "../../data/parser_datas/AST_node.h"
-
-//Entry para as AST's
-typedef struct EntryASTS {
-    char *identifier;
-    ASTNode *node;
-    struct EntryASTS *next;
-} EntryASTS;
-
-typedef struct {
-    EntryASTS *nodes[50];
-} VariablesMap;
-
-int Hash(const char *identifier);
-char *GetIdentifierVariable(ASTNode *ast);
 
 VariablesMap *VariablesMapInit(){ //Inicializa o VariablesMap
     VariablesMap *map = calloc(1, sizeof(VariablesMap));
@@ -93,17 +80,6 @@ int VariablesMapRemove(VariablesMap *map, const char* identifier){
     }
     
     return 0;
-}
-
-int Hash(const char *identifier){
-    unsigned long hash = 0;
-
-    while(*identifier){
-        hash = hash * 31 + (unsigned char)*identifier;
-        identifier++;
-    }
-
-    return hash % 50;
 }
 
 char *GetIdentifierVariable(ASTNode *ast){

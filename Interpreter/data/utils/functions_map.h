@@ -3,7 +3,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef void (*RuneFunction)(char *);
+#include "../parser_datas/AST_node.h"
+
+typedef void (*RuneFunction)(ASTNode *);
 
 typedef struct EntryFunctions {
     char *identifier;
@@ -20,7 +22,7 @@ extern FunctionsMap *functionsMap;
 int Hash(const char *identifier);
 
 FunctionsMap *FunctionsMapInit(void);
-void FunctionsMapAdd(FunctionsMap *map, const char *identifier, RuneFunction function);
-RuneFunction FunctionsMapGet(FunctionsMap *map, const char *identifier);
-int FunctionsMapRemove(FunctionsMap *map, const char *identifier);
+void FunctionsMapAdd(const char *identifier, RuneFunction function);
+RuneFunction FunctionsMapGet(const char *identifier);
+int FunctionsMapRemove(const char *identifier);
 

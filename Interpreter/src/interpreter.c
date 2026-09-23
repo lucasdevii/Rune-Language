@@ -1,6 +1,7 @@
 #include "../data/interpreter.h"
 #include "../data/parser_datas/AST_node.h"
-#include "./utils/variables_map.c"
+#include "../data/utils/variables_map.h"
+#include "../data/utils/functions_map.h"
 
 static const char *ASTTypeName(ASTNodeType type)
 {
@@ -88,7 +89,13 @@ int CheckAST(ASTNode *current, VariablesMap *variablesMap){
 		VariablesMapAdd(variablesMap, current);
 	}
 	else if(current->type == AST_CALL){
-		
+		//Pega a função da linguagem caso esse identificador já seja reservado
+		RuneFunction functionInLanguage = FunctionsMapGet(current->call.name);
+
+		if(functionInLanguage != NULL){
+			//Depois tratar para mais de um parametro.
+			functionInLanguage(current);
+		}
 	}
 
 }
