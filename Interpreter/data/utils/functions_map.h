@@ -15,6 +15,8 @@ typedef struct {
     EntryFunctions *nodes[50];
 } FunctionsMap;
 
+extern FunctionsMap *functionsMap;
+
 int Hash(const char *identifier);
 
 FunctionsMap *FunctionsMapInit(void);

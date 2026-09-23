@@ -9,6 +9,7 @@
 #include "../data/parser.h"
 #include "../data/parser_datas/AST_node.h"
 #include "../data/interpreter.h"
+#include "../data/rune_functions/function_definition.h"
 
 //pré-inicialização
 
@@ -16,6 +17,10 @@ FILE* GetArchive(char *caminho);
 void ReadArchive(FILE *file, Token **headTokensList);
 
 int main(int argc, char *argv[]){
+    //Inicializa as funções padrão da linguagem
+    FunctionsMap *map = FunctionsMapInit();
+    RegisterRuneFunctions(map);
+    
     ASTList *headASTList = malloc(sizeof(ASTList));
     headASTList->next = NULL;
     headASTList->current = NULL;

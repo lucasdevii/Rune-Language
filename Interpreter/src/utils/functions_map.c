@@ -2,13 +2,15 @@
 
 #include <string.h>
 
+FunctionsMap *functionsMap = NULL;
+
 FunctionsMap *FunctionsMapInit(void){
     return calloc(1, sizeof(FunctionsMap));
 }
 
-void FunctionsMapAdd(FunctionsMap *map, const char *identifier, RuneFunction function)
+void FunctionsMapAdd(const char *identifier, RuneFunction function)
 {
-    if (map == NULL || identifier == NULL || function == NULL) {
+    if (functionsMap == NULL || identifier == NULL || function == NULL) {
         return;
     }
 
@@ -21,18 +23,18 @@ void FunctionsMapAdd(FunctionsMap *map, const char *identifier, RuneFunction fun
 
     informations->identifier = strdup(identifier);
     informations->function = function;
-    informations->next = map->nodes[bucketLocation];
-    map->nodes[bucketLocation] = informations;
+    informations->next = functionsMap->nodes[bucketLocation];
+    functionsMap->nodes[bucketLocation] = informations;
 }
 
-RuneFunction FunctionsMapGet(FunctionsMap *map, const char *identifier)
+RuneFunction FunctionsMapGet(const char *identifier)
 {
-    if (map == NULL || identifier == NULL) {
+    if (functionsMap == NULL || identifier == NULL) {
         return NULL;
     }
 
     int bucketIndex = Hash(identifier);
-    EntryFunctions *currentEntry = map->nodes[bucketIndex];
+    EntryFunctions *currentEntry = functionsMap->nodes[bucketIndex];
 
     while (currentEntry != NULL) {
         if (strcmp(currentEntry->identifier, identifier) == 0) {
@@ -43,35 +45,4 @@ RuneFunction FunctionsMapGet(FunctionsMap *map, const char *identifier)
     }
 
     return NULL;
-}
-
-int FunctionsMapRemove(FunctionsMap *map, const char *identifier)
-{
-    if (map == NULL || identifier == NULL) {
-        return 0;
-    }
-
-    int bucketIndex = Hash(identifier);
-    EntryFunctions *currentEntry = map->nodes[bucketIndex];
-    EntryFunctions *beforeEntry = NULL;
-
-    while (currentEntry != NULL) {
-        if (strcmp(currentEntry->identifier, identifier) == 0) {
-            if (beforeEntry != NULL) {
-                beforeEntry->next = currentEntry->next;
-            }
-            else {
-                map->nodes[bucketIndex] = currentEntry->next;
-            }
-
-            free(currentEntry->identifier);
-            free(currentEntry);
-            return 1;
-        }
-
-        beforeEntry = currentEntry;
-        currentEntry = currentEntry->next;
-    }
-
-    return 0;
 }
