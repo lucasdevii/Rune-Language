@@ -4,8 +4,9 @@
 #include <stdlib.h>
 
 #include "../parser_datas/AST_node.h"
+#include "variables_map.h"
 
-typedef void (*RuneFunction)(ASTNode *);
+typedef void (*RuneFunction)(ASTNode *, VariablesMap *);
 
 typedef struct EntryFunctions {
     char *identifier;

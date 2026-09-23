@@ -18,8 +18,7 @@ void ReadArchive(FILE *file, Token **headTokensList);
 
 int main(int argc, char *argv[]){
     //Inicializa as funções padrão da linguagem
-    FunctionsMap *map = FunctionsMapInit();
-    RegisterRuneFunctions(map);
+    RegisterRuneFunctions();
     
     ASTList *headASTList = malloc(sizeof(ASTList));
     headASTList->next = NULL;

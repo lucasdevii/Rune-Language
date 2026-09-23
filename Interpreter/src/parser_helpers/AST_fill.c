@@ -96,6 +96,8 @@ void IfFunctionCall(Token **current, ASTNode *node)
     token = token->nextNode;
 
     if(token != NULL && (token->specificType == IDENTIFIER || token->geralType == VALUE)){
+        node->call.arguments = strdup(token->text);
+
         while(
             token != NULL && 
             (token->specificType == IDENTIFIER || token->geralType == VALUE)

@@ -69,6 +69,7 @@ void Interpreter(ASTList *headList){
 	while (current != NULL) {
 		if (current->current != NULL) {
 			PrintASTBeingInterpreted(current->current, index);
+			CheckAST(current->current, variablesMap);
 			index++;
 		}
 
@@ -84,18 +85,15 @@ void Interpreter(ASTList *headList){
 
 int CheckAST(ASTNode *current, VariablesMap *variablesMap){
 	if(current->type == AST_VARIABLE){
-		//tratar para valores em asts binarios e reduzir para apenas um 
-				
 		VariablesMapAdd(variablesMap, current);
 	}
 	else if(current->type == AST_CALL){
-		//Pega a função da linguagem caso esse identificador já seja reservado
 		RuneFunction functionInLanguage = FunctionsMapGet(current->call.name);
 
 		if(functionInLanguage != NULL){
-			//Depois tratar para mais de um parametro.
-			functionInLanguage(current);
+			functionInLanguage(current, variablesMap);
 		}
 	}
 
+	return 1;
 }

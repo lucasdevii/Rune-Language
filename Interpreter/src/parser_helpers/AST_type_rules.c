@@ -23,9 +23,6 @@ ASTNodeType GetASTType(Token *current){
     if(type == AST_NOTHING){
         type = IfHasIdentifier(current);
     }
-    else{
-        printf("ERRO DE SINTAXE: tipo de AST não conhecida");
-    }
 
     return type;
 }

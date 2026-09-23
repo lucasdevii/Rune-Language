@@ -5,7 +5,8 @@
 FunctionsMap *functionsMap = NULL;
 
 FunctionsMap *FunctionsMapInit(void){
-    return calloc(1, sizeof(FunctionsMap));
+    functionsMap = calloc(1, sizeof(FunctionsMap));
+    return functionsMap;
 }
 
 void FunctionsMapAdd(const char *identifier, RuneFunction function)
