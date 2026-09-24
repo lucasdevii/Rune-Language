@@ -4,18 +4,10 @@
 #include <stdlib.h>
 
 #include "../data/token.h"
+#include "../data/lexer.h"
 
 //PRÉ INICIALIZAÇÃO DE FUNÇÕES
 void AddToken(Token **head, Token **tail, char *text, TokenTypes generalType, TokenTypes specificType);
-void TokenTypeVerifications(char *buffer, TokenTypes *generalType, TokenTypes *specificType);
-
-int CheckPrimitiveTypes(char *buffer, TokenTypes *generalType, TokenTypes *specificType);
-
-int CheckVariablesComponent(char *buffer, TokenTypes *generalType, TokenTypes *specificType);
-
-int CheckSpecialTokens(char character, char* buffer, FILE *file, TokenTypes *generalType, TokenTypes *specificType);
-int CheckPunctuator(char character, TokenTypes *generalType, TokenTypes *specificType);
-int CheckOperators(char character, FILE *file, TokenTypes *generalType, TokenTypes *specificType);
 
 TokenTypePair GetType(char *buffer);
 
