@@ -25,9 +25,6 @@ void show(ASTNode *node, VariablesMap *variablesMap){
             case TYPE_BOOL:
                 printf("%s\n", argumentNode->variable.value.intValue ? "true" : "false");
                 break;
-            default:
-                printf("%s\n", node->call.arguments);
-                break;
         }
     } else {
         printf("%s\n", node->call.arguments);
