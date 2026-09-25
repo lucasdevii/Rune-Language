@@ -1,0 +1,7 @@
+typedef enum TokenTypes{
+    TOKEN_IDENTIFIER,
+    TOKEN_TYPE,
+    TOKEN_OPEN_BRACES,
+    TOKEN_CLOSE_BRACES,
+    TOKEN_NEWLINE
+} TokenTypes;
