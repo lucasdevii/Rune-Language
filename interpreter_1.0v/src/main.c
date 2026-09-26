@@ -3,12 +3,21 @@
 
 #include "data/token_data/token_structs.h"
 
+FILE* GetArchive(char *caminho);
+Token *ReadArchive(FILE* file);
+
 int Main(int argc, char *argv[]){
     char *path = argv[1];
 
-    FILE *archive = GetArchive(path);
+    FILE *file = GetArchive(path);
 
-    Token tokenHead = ReadArchive(archive);
+    if(file == NULL){
+        printf("Arquivo não identificado.");
+
+        exit(EXIT_FAILURE);
+    }
+
+    Token *tokenHead = ReadArchive(file);
 }
 
 FILE* GetArchive(char *caminho){
@@ -24,16 +33,8 @@ FILE* GetArchive(char *caminho){
 
 
 Token *ReadArchive(FILE* file){
-    if(file == NULL){
-        printf("Arquivo não identificado.");
-
-        exit(EXIT_FAILURE);
-    }
-
-    struct Token *tailTokensList = NULL;
     //FUNÇÃO LEXER RETORNA O TOKEN HEAD
-
-    Token *head;
+    Token *head = Lexer();
 
     fclose(file);
 
